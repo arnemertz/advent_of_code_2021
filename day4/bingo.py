@@ -55,7 +55,7 @@ def parse_bingo(input_lines: Iterable[str]) -> tuple[Numbers, Boards]:
     return bingo_numbers, list(parse_boards(lines))
 
 
-def bingo_score(input_lines: Iterable[str]) -> int:
+def bingo_score_first(input_lines: Iterable[str]) -> int:
     bingo_numbers, boards = parse_bingo(input_lines)
     for called_number in bingo_numbers:
         for board in boards:
@@ -65,9 +65,20 @@ def bingo_score(input_lines: Iterable[str]) -> int:
     return -1
 
 
+def bingo_score_last(input_lines: Iterable[str]) -> int:
+    bingo_numbers, boards = parse_bingo(input_lines)
+    for called_number in bingo_numbers:
+        for board in boards:
+            board.mark(called_number)
+        if len(boards) == 1 and boards[0].has_bingo():
+            return boards[0].unmarked_sum() * called_number
+        boards = [board for board in boards if not board.has_bingo()]
+    return -1
+
+
 if __name__ == '__main__':
     with open('input.txt') as in_file:
-        print(bingo_score(in_file))
+        print(bingo_score_last(in_file))
 
 EXAMPLE_INPUTS = [
     "7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1",
@@ -131,5 +142,9 @@ def test_parse_bingo() -> None:
     assert board.col(1) == list(zip([13, 2, 9, 10, 12], [False]*5))
 
 
-def test_bingo_score() -> None:
-    assert bingo_score(EXAMPLE_INPUTS) == 4512
+def test_bingo_score_first() -> None:
+    assert bingo_score_first(EXAMPLE_INPUTS) == 4512
+
+
+def test_bingo_score_last() -> None:
+    assert bingo_score_last(EXAMPLE_INPUTS) == 1924
