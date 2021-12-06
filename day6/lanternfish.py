@@ -20,14 +20,14 @@ def parse_start_population(input_lines: Iterable[str]) -> list[int]:
     return [int(p.strip()) for p in next(iter(input_lines)).strip().split(',')]
 
 
-def task1(input_lines: Iterable[str]) -> int:
+def task2(input_lines: Iterable[str]) -> int:
     start_population: list[int] = parse_start_population(input_lines)
-    return lanternfish_simulation(start_population, 80).total()
+    return lanternfish_simulation(start_population, 256).total()
 
 
 if __name__ == '__main__':
     with open('input.txt') as in_file:
-        print(task1(in_file))
+        print(task2(in_file))
 
 EXAMPLE_INPUT = [
     "3,4,3,1,2"
@@ -55,3 +55,4 @@ def test_lanternfish_simulation() -> None:
     )
     assert lanternfish_simulation(start_population, 18).total() == 26
     assert lanternfish_simulation(start_population, 80).total() == 5934
+    assert lanternfish_simulation(start_population, 256).total() == 26984457539
